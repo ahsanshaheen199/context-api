@@ -1,17 +1,43 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { v4 as uuid } from 'uuid'
+import { ADD_USER } from '../context/Actions'
+import { UserContext } from '../context/UserContext'
 
-export const AddUser = () => {
+export const AddUser = ( { history } ) => {
+	const [name, setName] = useState('')
+	const {state, dispatch} = useContext(UserContext)
+
+	const addUser = (e) => {
+		e.preventDefault()
+
+		if( name == '' ) {
+			return;
+		}
+
+		dispatch({
+			type: ADD_USER,
+			payload: {
+				id: uuid(),
+				name
+			}
+		});
+
+		history.push('/')
+	}
+
     return (
         <div>
-            <form>
+            <form onSubmit={addUser}>
             	<div className="mb-3">
             		<label className="font-medium">Name</label>
             		<div className="mt-1">
             			<input 
             				type="text"
             				placeholder="Enter Name"
-            				className="px-3 py-4 rounded w-full border" 
+            				className="px-3 py-4 rounded w-full border"
+            				value={name}
+            				onChange={ e => setName(e.target.value) } 
             			/>
             		</div>
             	</div>
